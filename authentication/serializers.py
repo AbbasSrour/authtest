@@ -1,9 +1,8 @@
-import jwt
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 
 from authentication.models import CustomUser, UserSession
-from authtest import settings
+from authentication.utils import decode_token
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -53,9 +52,7 @@ class RefreshTokenSerializer(serializers.Serializer):
 	def validate(self, attrs):
 		refresh = attrs.get('refresh_token')
 
-		data = jwt.decode(jwt=refresh, key=settings.SECRET_KEY,
-		                  algorithms=settings.SIMPLE_JWT['ALGORITHM'],
-		                  options={'verify_signature': True})
+		data = decode_token(refresh)
 		return data
 
 

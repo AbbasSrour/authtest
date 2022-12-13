@@ -150,3 +150,9 @@ SIMPLE_JWT = {
 }
 
 DATABASE_ROUTERS = ['dynamic_db_router.DynamicDbRouter']
+
+REST_FRAMEWORK = {
+	'DEFAULT_AUTHENTICATION_CLASSES': [
+		'authentication.backend.AccessTokenAuthenticationBackend',
+	]
+}
