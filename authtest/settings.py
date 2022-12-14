@@ -66,7 +66,7 @@ DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
 		'NAME': 'authtest1',
-		'USER': 'ares',
+		'USER': 'abbas',
 		'PASSWORD': '7142',
 		'HOST': 'localhost',
 		'PORT': '5432',
@@ -74,7 +74,7 @@ DATABASES = {
 	'company1': {
 		'ENGINE': 'django.db.backends.postgresql',
 		'NAME': 'authtest2',
-		'USER': 'ares',
+		'USER': 'abbas',
 		'PASSWORD': '7142',
 		'HOST': 'localhost',
 		'PORT': '5432',
@@ -118,8 +118,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-	'ACCESS_TOKEN_LIFETIME': timedelta(seconds=5),
-	'REFRESH_TOKEN_LIFETIME': timedelta(hours=1),
+	'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+	'REFRESH_TOKEN_LIFETIME': timedelta(hours=12),
 	'ROTATE_REFRESH_TOKENS': False,
 	'BLACKLIST_AFTER_ROTATION': False,
 	'UPDATE_LAST_LOGIN': False,

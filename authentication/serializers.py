@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 
 from authentication.models import CustomUser, UserSession
 from authentication.utils import decode_token
@@ -22,22 +22,22 @@ class LoginSerializer(serializers.Serializer):
 		required=True,
 		style={'input_type': 'password'}
 	)
-	company = serializers.CharField(read_only=True)
+	database = serializers.CharField(read_only=True)
 
 	def validate(self, attrs):
 		username = attrs.get('username', '')
 		password = attrs.get('password', '')
-		database = attrs.get('company', '')
+		database = attrs.get('database', '')
 
 		try:
-			user = CustomUser.objects.get(username=username)
+			user = CustomUser.objects.using(database).get(username=username)
 		except CustomUser.DoesNotExist:
-			raise AuthenticationFailed('Invalid password or username')
+			raise ValidationError('Invalid password or username', code=400)
 
 		if not user.check_password(password):
-			return AuthenticationFailed('Invalid username or password')
+			raise ValidationError('Invalid username or password', code=400)
 		if not user.is_active:
-			return AuthenticationFailed('Not active')
+			raise ValidationError('Not active', code=403)
 
 		return user
 
