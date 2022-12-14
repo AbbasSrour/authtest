@@ -1,15 +1,15 @@
 import jwt
-from django.contrib.auth.backends import ModelBackend
+from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 
 from authentication.models import CustomUser
-from authentication.utils import decode_token_unsafe, user_has_valid_session
+from authentication.utils import decode_token_unsafe, user_has_valid_session, decode_token
 
 
-class AccessTokenAuthenticationBackend(ModelBackend):
+class AccessTokenAuthenticationBackend(authentication.BaseAuthentication):
 	def authenticate(self, request, username=None, password=None, **kwargs):
 		# Get the authorization header from the request
-		auth_header = request.META.get('AUTHORIZATION')
+		auth_header = request.META.get('HTTP_AUTHORIZATION')
 
 		if not auth_header:
 			raise AuthenticationFailed('No Authorization token provided')
@@ -43,23 +43,26 @@ class AccessTokenAuthenticationBackend(ModelBackend):
 			return None
 
 
-class RefreshTokenAuthenticationBackend(ModelBackend):
+class RefreshTokenAuthenticationBackend(authentication.BaseAuthentication):
 	def authenticate(self, request, username=None, password=None, **kwargs):
 		# Get the authorization header from the request
-		auth_header = request.META.get('AUTHORIZATION')
+		auth_header = request.META.get('HTTP_AUTHORIZATION')
+
+		print(auth_header)
 
 		if not auth_header:
 			raise AuthenticationFailed('No Authorization token provided')
 
 		# Get the Authorization token
 		token = auth_header.split()[1]
+		print(token)
 
 		if not token:
 			raise AuthenticationFailed('No Authorization token provided')
 
 		# Check the JWT token provided by the user
 		try:
-			payload = decode_token_unsafe(token)
+			payload = decode_token(token)
 			user_id = payload['user']['user_id']
 			database = payload['database']
 			request.META['database'] = database

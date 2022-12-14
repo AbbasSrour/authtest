@@ -31,6 +31,8 @@ class UserCompaniesApiView(APIView):
 
 class UserLoginView(APIView):
 	serializer_class = LoginSerializer
+	authentication_classes = []
+	permission_classes = []
 
 	def post(self, req: Request):
 		# If the client did not specify a company the database will default to 'default'
@@ -88,8 +90,8 @@ class UserLoginView(APIView):
 
 class RefreshTokensApiView(APIView):
 	serializer_class = RefreshTokenSerializer
-	authentication_classes = RefreshTokenAuthenticationBackend
-	permission_classes = IsAuthenticated
+	authentication_classes = [RefreshTokenAuthenticationBackend]
+	permission_classes = [IsAuthenticated]
 
 	def post(self, req: Request):
 		user = req.user
